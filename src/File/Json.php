@@ -112,7 +112,7 @@ class Json extends Base
                 $errors[] = ($error['property'] ? $error['property'].' : ' : '').$error['message'];
             }
 
-            throw DecodeException::create($this->getPath, array('errors' => $errors));
+            throw DecodeException::create($this->getPath(), array('errors' => $errors));
         }
     }
 
