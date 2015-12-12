@@ -1,2 +1,3 @@
 # file-utils
-File related utilities.
+
+This component is currently under development.
