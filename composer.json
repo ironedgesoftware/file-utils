@@ -17,7 +17,7 @@
         "issues": "https://github.com/ironedgesoftware/file-utils/issues"
     },
     "require": {
-        "php": "^5.3.2 || ^7.0",
+        "php": "^5.6.0 || ^7.0",
         "justinrainbow/json-schema": "^1.4.4",
         "symfony/options-resolver": "^3.0",
         "seld/jsonlint": "^1.4"
