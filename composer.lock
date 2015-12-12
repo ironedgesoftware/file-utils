@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "077ba67a3e2d4d6a6afbb87a9297c2b8",
-    "content-hash": "bf06231a40fc33bd81604355f28533f0",
+    "hash": "4798fa74ad697d6279fcdfded34b7c04",
+    "content-hash": "49955538ab19e104b6a0e8680b6176b7",
     "packages": [
         {
             "name": "justinrainbow/json-schema",
@@ -1219,7 +1219,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^5.3.2 || ^7.0"
+        "php": "^5.6.0 || ^7.0"
     },
     "platform-dev": []
 }
