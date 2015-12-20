@@ -34,6 +34,10 @@ class FactoryTest extends AbstractTestCase
         $this->assertInstanceOf('\IronEdge\Component\FileUtils\File\Json', $file);
     }
 
+
+
+    // Helper methods.
+
     protected function createFileInstance($path, $type = null, array $options = array())
     {
         $factory = new Factory();

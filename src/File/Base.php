@@ -11,6 +11,8 @@
 
 namespace IronEdge\Component\FileUtils\File;
 
+use IronEdge\Component\FileUtils\Exception\LoadException;
+use IronEdge\Component\FileUtils\Exception\SaveException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /*
@@ -151,6 +153,8 @@ abstract class Base
      * @param bool  $refresh - If this is true then the file will be open even if it was open before.
      * @param array $options - Options.
      *
+     * @throws LoadException
+     *
      * @return $this
      */
     public function load($refresh = false, array $options = array())
@@ -159,9 +163,7 @@ abstract class Base
             $this->_contents = @file_get_contents($this->_path);
 
             if ($this->_contents === false) {
-                throw new \RuntimeException(
-                    'Couldn\'t open file "'.$this->_path.'" for reading. PHP Error: '.print_r(error_get_last(), true)
-                );
+                throw LoadException::create($this->_path);
             }
 
             $this->setContents($this->decode($options));
@@ -175,6 +177,8 @@ abstract class Base
      *
      * @param array $options - Options.
      *
+     * @throws SaveException
+     *
      * @return $this
      */
     public function save(array $options = array())
@@ -182,9 +186,7 @@ abstract class Base
         $data = $this->encode($options);
 
         if (($result = @file_put_contents($this->_path, $data)) === false) {
-            throw new \RuntimeException(
-                'Couldn\'t write into file "'.$this->_path.'". PHP Error: '.print_r(error_get_last(), true)
-            );
+            throw SaveException::create($this->_path);
         }
 
         return $this;

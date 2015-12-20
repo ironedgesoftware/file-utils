@@ -53,6 +53,9 @@ class FactoryTest extends AbstractTestCase
         $this->assertEquals('testValue', $data['newValue']);
     }
 
+
+    // Helper methods
+
     protected function createFactory()
     {
         return new Factory();
