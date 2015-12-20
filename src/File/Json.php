@@ -11,21 +11,27 @@
 
 namespace IronEdge\Component\FileUtils\File;
 
+use IronEdge\Component\FileUtils\Exception\DecodeException;
+use IronEdge\Component\FileUtils\Exception\EncodeException;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /*
- * Handlers JSON files.
+ * Handles JSON files.
  *
  * @author Gustavo Falco <comfortablynumb84@gmail.com>
  */
-use IronEdge\Component\FileUtils\Exception\DecodeException;
-use IronEdge\Component\FileUtils\Exception\EncodeException;
-use JsonSchema\Validator;
-use Seld\JsonLint\JsonParser;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
 class Json extends Base
 {
-    public function decode(array $options = array())
+    /**
+     * Decodes JSON data.
+     *
+     * @param array $options - Options.
+     *
+     * @throws DecodeException
+     *
+     * @return array
+     */
+    public function decode(array $options = [])
     {
         $json = json_decode($this->getContents(), true);
 
@@ -40,26 +46,42 @@ class Json extends Base
         return $json;
     }
 
-    public function encode(array $options = array())
+    /**
+     * Encodes data in JSON format.
+     *
+     * @param array $options - Options.
+     *
+     * @throws EncodeException
+     *
+     * @return string
+     */
+    public function encode(array $options = [])
     {
-        $json = json_encode($this->getContents(), $this->getOption('encodingOptions'));
+        $options = array_replace(
+            [
+                'encodingOptions'       => $this->getOption('encodingOptions')
+            ],
+            $options
+        );
 
-        if (false === $json) {
+        $json = json_encode($this->getContents(), $options['encodingOptions']);
+
+        if ($json === false) {
             switch (json_last_error()) {
                 case JSON_ERROR_DEPTH:
-                    $msg = 'Maximum stack depth exceeded';
+                    $msg = 'The maximum stack depth has been exceeded.';
 
                     break;
                 case JSON_ERROR_STATE_MISMATCH:
-                    $msg = 'Underflow or the modes mismatch';
+                    $msg = 'Occurs with underflow or with the modes mismatch.';
 
                     break;
                 case JSON_ERROR_CTRL_CHAR:
-                    $msg = 'Unexpected control character found';
+                    $msg = 'Control character error, possibly incorrectly encoded.';
 
                     break;
                 case JSON_ERROR_UTF8:
-                    $msg = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+                    $msg = 'alformed UTF-8 characters, possibly incorrectly encoded.';
 
                     break;
                 default:
@@ -84,13 +106,20 @@ class Json extends Base
         parent::configureOptions($resolver);
 
         $resolver->setDefaults(
-            array(
+            [
                 'schemaPath'            => null,
                 'encodingOptions'       => 448
-            )
+            ]
         );
     }
 
+    /**
+     * Validates JSON schema.
+     *
+     * @throws DecodeException
+     *
+     * @return void
+     */
     protected function validateSchema()
     {
         $schemaPath = $this->getOption('schemaPath');
@@ -101,29 +130,49 @@ class Json extends Base
 
         $schemaData = json_decode(file_get_contents($schemaPath));
 
-        $validator = new Validator();
+        if (!class_exists('\\JsonSchema\\Validator')) {
+            throw new \RuntimeException(
+                'If you want to validate a JSON schema, you must require package "justinrainbow/json-schema"-'
+            );
+        }
+
+        $validator = new \JsonSchema\Validator();
         $validator->check($this->getContents(), $schemaData);
 
-
         if (!$validator->isValid()) {
-            $errors = array();
+            $errors = [];
 
             foreach ((array) $validator->getErrors() as $error) {
                 $errors[] = ($error['property'] ? $error['property'].' : ' : '').$error['message'];
             }
 
-            throw DecodeException::create($this->getPath(), array('errors' => $errors));
+            throw DecodeException::create($this->getPath(), ['errors' => $errors]);
         }
     }
 
+    /**
+     * Validates JSON syntax using lint.
+     *
+     * @throws DecodeException
+     *
+     * @return bool
+     */
     protected function validateSyntax()
     {
-        $parser = new JsonParser();
+        if (!class_exists('\\Seld\\JsonLint\\JsonParser')) {
+            throw new \RuntimeException(
+                'If you want to validate JSON syntax using lint, you must require package "seld/jsonlint".'
+            );
+        }
+
+        $parser = new \Seld\JsonLint\JsonParser();
         $result = $parser->lint($this->getContents());
 
         if ($result === null) {
-            if (defined('JSON_ERROR_UTF8') && JSON_ERROR_UTF8 === json_last_error()) {
-                throw new \UnexpectedValueException('"'.$this->getPath().'" is not UTF-8, could not parse as JSON');
+            if (JSON_ERROR_UTF8 === json_last_error()) {
+                throw new \UnexpectedValueException(
+                    '"'.$this->getPath().'" is not encoded in UTF-8, could not parse as JSON'
+                );
             }
 
             return true;
@@ -131,7 +180,7 @@ class Json extends Base
 
         throw DecodeException::create(
             $this->getPath(),
-            array('message' => $result->getMessage(), 'details' => $result->getDetails())
+            ['message' => $result->getMessage(), 'details' => $result->getDetails()]
         );
     }
 }
