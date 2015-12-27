@@ -33,6 +33,7 @@
     "autoload-dev": {
         "psr-4": { "IronEdge\\Component\\FileUtils\\Test\\": "tests" }
     },
+    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
             "dev-master": "1.0-dev"
