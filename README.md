@@ -11,6 +11,7 @@ This component allows you to load, save, encode and decode files of different ty
 Currently supported formats:
 
 * JSON
+* YAML
 
 See the roadmap to know which other file types will be supported in future versions.
 
@@ -61,5 +62,4 @@ $file->save();
 
 ## Roadmap
 
-* YML Handling.
 * XML Handling.

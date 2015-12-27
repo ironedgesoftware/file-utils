@@ -11,6 +11,7 @@
 
 namespace IronEdge\Component\FileUtils\Test\Acceptance;
 
+use Symfony\Component\Yaml\Yaml;
 
 /*
  * @author Gustavo Falco <comfortablynumb84@gmail.com>
@@ -39,6 +40,20 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase
                     array(
                         'path'              => $tmpDir.'/invalid.json',
                         'contents'          => '{{}}}{{{{{'
+                    )
+                )
+            ),
+            'yml'               => array(
+                'valid'             => array(
+                    array(
+                        'path'              => $tmpDir.'/valid.yml',
+                        'contents'          => Yaml::dump(array('test1' => 'value1', 'test2' => 'value2'))
+                    )
+                ),
+                'invalid'       => array(
+                    array(
+                        'path'              => $tmpDir.'/invalid.yml',
+                        'contents'          => '                       !ad as da das das '
                     )
                 )
             )

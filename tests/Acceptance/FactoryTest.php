@@ -53,6 +53,40 @@ class FactoryTest extends AbstractTestCase
         $this->assertEquals('testValue', $data['newValue']);
     }
 
+    public function test_ymlFiles()
+    {
+        $factory = $this->createFactory();
+
+        // Load Yaml data
+
+        $path = $this->files['yml']['valid'][0]['path'];
+        $file = $factory->createInstance($path);
+
+        $this->assertInstanceOf('\IronEdge\Component\FileUtils\File\Yaml', $file);
+
+        $data = $file->getContents();
+
+        $this->assertEquals('value1', $data['test1']);
+
+        // Save new Yaml data
+
+        $data['newValue'] = 'testValue';
+
+        $newPath = $path.'.yml';
+
+        $file->setContents($data)
+            ->setPath($newPath)
+            ->save();
+
+        $file = $factory->createInstance($newPath);
+
+        $this->assertInstanceOf('\IronEdge\Component\FileUtils\File\Yaml', $file);
+
+        $data = $file->getContents();
+
+        $this->assertEquals('testValue', $data['newValue']);
+    }
+
 
     // Helper methods
 

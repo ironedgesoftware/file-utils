@@ -20,6 +20,7 @@ use IronEdge\Component\FileUtils\Exception\UnsupportedFileTypeException;
 class Factory
 {
     const JSON_TYPE                 = 'json';
+    const YAML_TYPE                 = 'yml';
 
     /**
      * Creates an instance of a file.
@@ -40,14 +41,15 @@ class Factory
             );
         }
 
-        // Simple extension match for now
-        $type = $type === null ?
-            substr($file, strrpos(strtolower($file), '.') + 1) :
-            $type;
+        $type = pathinfo($file, PATHINFO_EXTENSION);
 
         switch ($type) {
             case self::JSON_TYPE:
                 $file = new Json($file, $options);
+
+                break;
+            case self::YAML_TYPE:
+                $file = new Yaml($file, $options);
 
                 break;
             default:

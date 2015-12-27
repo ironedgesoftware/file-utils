@@ -25,7 +25,8 @@
     },
     "suggest": {
         "seld/jsonlint": "Enabling JSON lint validation.",
-        "justinrainbow/json-schema": "Enabling JSON schema validation."
+        "justinrainbow/json-schema": "Enabling JSON schema validation.",
+        "symfony/yaml": "Enabling YAML files handling."
     },
     "autoload": {
         "psr-4": { "IronEdge\\Component\\FileUtils\\": "src" }
