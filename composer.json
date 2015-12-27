@@ -28,10 +28,10 @@
         "symfony/yaml": "Enabling YAML files handling."
     },
     "autoload": {
-        "psr-4": { "IronEdge\\Component\\FileUtils\\": "src" }
-    },
-    "autoload-dev": {
-        "psr-4": { "IronEdge\\Component\\FileUtils\\Test\\": "tests" }
+        "psr-4": {
+            "IronEdge\\Component\\FileUtils\\": "src",
+            "IronEdge\\Component\\FileUtils\\Test\\": "tests"
+        }
     },
     "minimum-stability": "dev",
     "extra": {
