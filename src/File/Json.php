@@ -95,17 +95,14 @@ class Json extends Base
     }
 
     /**
-     * Configures the options resolver.
+     * Returns default options.
      *
-     * @param OptionsResolver $resolver - Resolver.
-     *
-     * @return void
+     * @return array
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    protected function getDefaultOptions()
     {
-        parent::configureOptions($resolver);
-
-        $resolver->setDefaults(
+        return array_replace_recursive(
+            parent::getDefaultOptions(),
             [
                 'schemaPath'            => null,
                 'encodingOptions'       => 448

@@ -112,11 +112,10 @@ abstract class Base
      */
     public function setOptions($options)
     {
-        $resolver = new OptionsResolver();
-
-        $this->configureOptions($resolver);
-
-        $this->_options = $resolver->resolve($options);
+        $this->_options = array_replace_recursive(
+            $this->getDefaultOptions(),
+            $options
+        );
 
         return $this;
     }
@@ -193,14 +192,13 @@ abstract class Base
     }
 
     /**
-     * Configures the options resolver.
+     * Returns default options.
      *
-     * @param OptionsResolver $resolver - Resolver.
-     *
-     * @return void
+     * @return array
      */
-    protected function configureOptions(OptionsResolver $resolver)
+    protected function getDefaultOptions()
     {
+        return [];
     }
 
     /**
